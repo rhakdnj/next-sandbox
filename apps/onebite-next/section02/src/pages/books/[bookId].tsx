@@ -1,9 +1,25 @@
 import books from "@/mock/books.json";
 import style from "./[bookId].module.css"
+import {GetServerSidePropsContext, InferGetServerSidePropsType} from "next";
+import BookApi from "@/lib/BookApi";
 
 const book = books[0]
 
-export default function Page() {
+export const getServerSideProps = async ({params}: GetServerSidePropsContext) => {
+  const bookApi = new BookApi();
+  const bookId = Number(params!.bookId);
+  return {
+    props: {
+      book: await bookApi.getBook(bookId)
+    }
+  }
+}
+
+export default function Page(
+  {book}: InferGetServerSidePropsType<typeof getServerSideProps>
+) {
+  if (!book) return "Error!"
+
   return <div className={style.container}>
     <div
       className={style.cover_img_container}
@@ -17,5 +33,5 @@ export default function Page() {
       {book.author} | {book.publisher}
     </div>
     <div className={style.description}>{book.description}</div>
-  </div>
+  </div>;
 }
