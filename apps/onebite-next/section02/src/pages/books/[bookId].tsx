@@ -1,6 +1,7 @@
 import style from "./[bookId].module.css"
 import {GetServerSidePropsContext, InferGetStaticPropsType} from "next";
 import BookApi from "@/lib/BookApi";
+import {useRouter} from "next/router";
 
 export const getStaticPaths = async () => {
   const bookApi = new BookApi();
@@ -12,6 +13,11 @@ export const getStaticPaths = async () => {
     /**
      * SSG invalid 대비책
      * false: not found
+     *
+     * blocking, true 둘다 서버에 생성된 html 페이지 저장, 이 후 SSG 적용
+     * 'blocking': SSR + SSG 방식
+     * true: SSR + 데이터가 없는 폴백 상태의 페이지부터 반환
+     * - fallback 상태
      */
     fallback: false,
   }
@@ -19,17 +25,24 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({params}: GetServerSidePropsContext) => {
   const bookApi = new BookApi();
-  const bookId = Number(params!.bookId);
-  return {
-    props: {
-      book: await bookApi.getBook(bookId)
-    }
+  const book = await bookApi.getBook(Number(params!.bookId));
+
+  if (!book) {
+    return {
+      notFound: true, // not found 페이지 redirect
+    };
   }
+
+  return {
+    props: {book}
+  };
 }
 
 export default function Page(
   {book}: InferGetStaticPropsType<typeof getStaticProps>
 ) {
+  const router = useRouter();
+  if (router.isFallback) return "Loading..."
   if (!book) return "Error!"
 
   return <div className={style.container}>
