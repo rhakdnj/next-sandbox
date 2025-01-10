@@ -19,7 +19,8 @@ export const getStaticProps = async () => {
   return {
     props: {
       books, recommendBooks,
-    }
+    },
+    revalidate: 3, // second
   }
 }
 
