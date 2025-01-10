@@ -1,0 +1,13 @@
+{
+  "name": "next-sandbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "api": "pnpm --filter @next-sandbox/api",
+    "section02": "pnpm --filter @section/02"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
