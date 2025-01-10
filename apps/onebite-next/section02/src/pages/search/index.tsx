@@ -4,20 +4,21 @@ import Book from "@/components/Book";
 import BookApi from "@/lib/BookApi";
 import {useRouter} from "next/router";
 import {IBook} from "@/type";
+import Head from "next/head";
 
 /**
  *
-export const getServerSideProps = async ({query}: GetServerSidePropsContext) => {
-  const q = query.q as string
+ export const getServerSideProps = async ({query}: GetServerSidePropsContext) => {
+ const q = query.q as string
 
-  let bookApi = new BookApi();
+ let bookApi = new BookApi();
 
-  return {
-    props: {
-      books: await bookApi.getBooks(q),
-    }
-  }
-}
+ return {
+ props: {
+ books: await bookApi.getBooks(q),
+ }
+ }
+ }
  */
 
 
@@ -44,11 +45,19 @@ export default function Page() {
     }
   }, [q])
 
-  return <div>
-    {books.map(book => (
-      <Book key={book.id} {...book} />
-    ))}
-  </div>
+  return (
+    <div>
+      <Head>
+        <title>한입북스 - 검색결과</title>
+        <meta property="og:image" content="/thumbnail.png"/>
+        <meta property="og:title" content="한입북스 - 검색결과"/>
+        <meta property="og:description" content="한입북스에 등록된 도서들을 만나보세요"/>
+      </Head>
+      {books.map(book => (
+        <Book key={book.id} {...book} />
+      ))}
+    </div>
+  );
 };
 
 

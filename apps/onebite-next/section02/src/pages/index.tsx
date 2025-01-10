@@ -4,6 +4,7 @@ import {ReactNode, useEffect} from "react";
 import Book from "@/components/Book";
 import {InferGetStaticPropsType} from "next";
 import BookApi from "@/lib/BookApi";
+import Head from "next/head";
 
 /**
  * SSR: getServerSideProps export
@@ -42,20 +43,28 @@ export default function Home({books, recommendBooks}: InferGetStaticPropsType<ty
   })
 
   return (
-    <div className={style.container}>
-      <section>
-        <h3>지금 추천하는 도서</h3>
-        {recommendBooks.map(book => (
-          <Book key={book.id} {...book} />
-        ))}
-      </section>
-      <section>
-        <h3>등록된 모든 도서</h3>
-        {books.map(book => (
-          <Book key={book.id} {...book} />
-        ))}
-      </section>
-    </div>
+    <>
+      <Head>
+        <title>한입북스</title>
+        <meta property="og:image" content="/thumbnail.png"/>
+        <meta property="og:title" content="한입북스"/>
+        <meta property="og:description" content="한입북스에 등록된 도서들을 만나보세요"/>
+      </Head>
+      <div className={style.container}>
+        <section>
+          <h3>지금 추천하는 도서</h3>
+          {recommendBooks.map(book => (
+            <Book key={book.id} {...book} />
+          ))}
+        </section>
+        <section>
+          <h3>등록된 모든 도서</h3>
+          {books.map(book => (
+            <Book key={book.id} {...book} />
+          ))}
+        </section>
+      </div>
+    </>
   )
 }
 
