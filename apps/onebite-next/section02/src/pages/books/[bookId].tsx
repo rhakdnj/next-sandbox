@@ -1,9 +1,6 @@
-import books from "@/mock/books.json";
 import style from "./[bookId].module.css"
 import {GetServerSidePropsContext, InferGetServerSidePropsType} from "next";
 import BookApi from "@/lib/BookApi";
-
-const book = books[0]
 
 export const getServerSideProps = async ({params}: GetServerSidePropsContext) => {
   const bookApi = new BookApi();

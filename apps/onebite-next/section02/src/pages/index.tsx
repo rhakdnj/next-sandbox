@@ -2,19 +2,14 @@ import style from './index.module.css'
 import SearchableLayout from "@/components/SearchableLayout";
 import {ReactNode, useEffect} from "react";
 import Book from "@/components/Book";
-import {InferGetServerSidePropsType} from "next";
+import {InferGetStaticPropsType} from "next";
 import BookApi from "@/lib/BookApi";
 
 /**
  * SSR: getServerSideProps export
  * // 컴포넌트보다 먼저 실행되어서, 컴포넌트에 필요한 데이터 불러오는 함수
  */
-export const getServerSideProps = async () => {
-  /**
-   * window 같은 브라우저 객체를 접근할 수 없다.
-   */
-  console.log("ServerSideProps 브라우저 콘솔에 노출되지 않아요.")
-
+export const getStaticProps = async () => {
   const bookApi = new BookApi();
   const [books, recommendBooks] = await Promise.all([
     bookApi.getBooks(),
@@ -37,7 +32,7 @@ export const getServerSideProps = async () => {
  * 서버 실행: 사전 Rendering
  * 브라우저 실행: 브라우저 bundle -> hydration
  */
-export default function Home({books, recommendBooks}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Home({books, recommendBooks}: InferGetStaticPropsType<typeof getStaticProps>) {
   /**
    * 컴포넌트 브라우저에 마운트 될 때만 실행 되기에 브라우저에서만 실행되게 할 수 있다.
    */
