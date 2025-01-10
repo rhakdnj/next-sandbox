@@ -1,8 +1,23 @@
 import style from "./[bookId].module.css"
-import {GetServerSidePropsContext, InferGetServerSidePropsType} from "next";
+import {GetServerSidePropsContext, InferGetStaticPropsType} from "next";
 import BookApi from "@/lib/BookApi";
 
-export const getServerSideProps = async ({params}: GetServerSidePropsContext) => {
+export const getStaticPaths = async () => {
+  const bookApi = new BookApi();
+  const books = await bookApi.getBooks();
+  return {
+    paths: books.map(book => ({
+      params: {bookId: String(book.id)}
+    })),
+    /**
+     * SSG invalid 대비책
+     * false: not found
+     */
+    fallback: false,
+  }
+}
+
+export const getStaticProps = async ({params}: GetServerSidePropsContext) => {
   const bookApi = new BookApi();
   const bookId = Number(params!.bookId);
   return {
@@ -13,7 +28,7 @@ export const getServerSideProps = async ({params}: GetServerSidePropsContext) =>
 }
 
 export default function Page(
-  {book}: InferGetServerSidePropsType<typeof getServerSideProps>
+  {book}: InferGetStaticPropsType<typeof getStaticProps>
 ) {
   if (!book) return "Error!"
 
