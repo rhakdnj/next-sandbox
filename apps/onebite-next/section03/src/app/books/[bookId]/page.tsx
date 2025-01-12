@@ -3,6 +3,10 @@ import {BookData} from "@/types";
 import {notFound} from "next/navigation";
 
 /**
+ * dynamicParams처럼 export 하여 페이지의 설정을 우리가 갖에로 조정할 수 있는 이러한 기능들을 라우트 세그먼트 옵션이라 부른다.
+ */
+
+/**
  * bookId (1,2,3) 이외는 404 NotFound
  */
 // export const dynamicParams = false;
