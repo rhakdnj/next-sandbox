@@ -1,21 +1,49 @@
 import BookItem from "@/components/book-item";
 import style from "./page.module.css";
-import books from "@/mock/books.json";
+import {BookData} from "@/types";
 
-export default function Home() {
+async function AllBooks() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BE_URL}/book`);
+  if (!res.ok) {
+    return <div>오류가 발생했습니다..</div>
+  }
+  const allBooks: BookData[] = await res.json();
+
+  return <div>
+    {allBooks.map((book: BookData) => (
+      <BookItem key={book.id} {...book} />
+    ))}
+  </div>
+}
+
+async function RecoBooks() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BE_URL}/book/random`);
+  if (!res.ok) {
+    return <div>오류가 발생했습니다..</div>
+  }
+  const randomBooks: BookData[] = await res.json();
+
+  return <div>
+    {randomBooks.map((book: BookData) => (
+      <BookItem key={book.id} {...book} />
+    ))}
+  </div>
+}
+
+export default async function Home() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BE_URL}/book`);
+  const allBooks = await res.json() as BookData[];
+  console.log(allBooks)
+
   return (
     <div className={style.container}>
       <section>
         <h3>지금 추천하는 도서</h3>
-        {books.map((book) => (
-          <BookItem key={book.id} {...book} />
-        ))}
+        <RecoBooks/>
       </section>
       <section>
         <h3>등록된 모든 도서</h3>
-        {books.map((book) => (
-          <BookItem key={book.id} {...book} />
-        ))}
+        <AllBooks/>
       </section>
     </div>
   );
