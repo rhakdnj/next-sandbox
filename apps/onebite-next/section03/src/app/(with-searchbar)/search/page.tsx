@@ -7,7 +7,10 @@ export default async function Page({searchParams}: {
     }>;
 }) {
     const {q} = await searchParams;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BE_URL}/book/search?q=${q}`);
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BE_URL}/book/search?q=${q}`,
+        {cache: 'force-cache'}
+    );
     if (!res.ok) {
         return <div>오류가 발생했습니다..</div>
     }
