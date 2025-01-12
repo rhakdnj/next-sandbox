@@ -1,4 +1,5 @@
 import {ReactNode} from "react";
+import Searchbar from "@/app/(with-searchbar)/searchbar";
 
 /**
  * search 하위의 경로에 모두 적용됨
@@ -10,7 +11,7 @@ export default function layout({
                                }: { children: ReactNode }) {
   return (
     <div>
-      <div>임시 서치바</div>
+      <Searchbar />
       {children}
     </div>
   )
