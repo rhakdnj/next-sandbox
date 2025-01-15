@@ -5,8 +5,10 @@ import {ReactNode} from "react";
 
 export default function RootLayout({
                                        children,
+                                       modal
                                    }: Readonly<{
     children: ReactNode;
+    modal: ReactNode
 }>) {
     return (
         <html lang="en">
@@ -18,7 +20,8 @@ export default function RootLayout({
             <main>{children}</main>
             <footer>제작 @winterlood</footer>
         </div>
-        <div id="modal-root"></div>
+        {modal}
+        <div id="modal-root"/>
         </body>
         </html>
     );
