@@ -1,5 +1,7 @@
 "use server";
 
+import {revalidatePath} from "next/cache";
+
 export async function createReviewAction(formData: FormData) {
     const bookId = formData.get("bookId")?.toString()
     const content = formData.get("content")?.toString()
@@ -14,8 +16,12 @@ export async function createReviewAction(formData: FormData) {
             method: "POST",
             body: JSON.stringify({bookId, content, author,})
         })
-
-        console.log(res.status)
+        /**
+         * ServerComponent 에서만 호출 가능.
+         * - fetch 데이터 캐시 무효화
+         * - 풀 라우트 캐시도 무효화
+         */
+        revalidatePath(`/books/${bookId}`)
     } catch (error) {
         console.error(error)
         return;
