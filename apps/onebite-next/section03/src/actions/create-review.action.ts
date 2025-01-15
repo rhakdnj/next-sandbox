@@ -2,13 +2,17 @@
 
 import {revalidatePath, revalidateTag} from "next/cache";
 
-export async function createReviewAction(formData: FormData) {
+export async function createReviewAction(_: unknown, formData: FormData) {
+    // _: state
     const bookId = formData.get("bookId")?.toString()
     const content = formData.get("content")?.toString()
     const author = formData.get("author")?.toString()
 
     if (!bookId || !content || !author) {
-        return;
+        return {
+            status: false,
+            error: "리뷰 내용과 작성자를 입력해주세요."
+        }
     }
 
     try {
@@ -47,9 +51,19 @@ export async function createReviewAction(formData: FormData) {
          *
          * context-before: await fetch("리뷰 목록 조회", {next: {tags: [`review-${bookId}`] } })
          */
-        revalidateTag(`review-${bookId}`)
+        if (!res.ok) {
+            throw new Error(res.statusText)
+        }
+
+        revalidateTag(`reviews-${bookId}`);
+        return {
+            status: true,
+            error: ""
+        }
     } catch (error) {
-        console.error(error)
-        return;
+        return {
+            status: false,
+            error: `리뷰 저장에 실패했습니다. ${error}`
+        }
     }
 }
