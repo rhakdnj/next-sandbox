@@ -1,7 +1,8 @@
 import style from "./page.module.css";
-import {BookData} from "@/types";
+import {BookData, ReviewData} from "@/types";
 import {notFound} from "next/navigation";
-import {createReviewAction} from "@/actions/create-review.action";
+import ReviewItem from "@/components/review-item";
+import {ReviewEditor} from "@/components/review-editor";
 
 /**
  * dynamicParams처럼 export 하여 페이지의 설정을 우리가 갖에로 조정할 수 있는 이러한 기능들을 라우트 세그먼트 옵션이라 부른다.
@@ -62,16 +63,20 @@ async function BookDetail({bookId}: { bookId: string }) {
     );
 }
 
-function ReviewEditor({bookId}: { bookId: string }) {
+async function ReviewList({bookId}: { bookId: string }) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BE_URL}/review/book/${bookId}`);
+
+    if (!res.ok) {
+        throw new Error(`Review fetch failed: ${res.statusText}`)
+    }
+
+    const reviews: ReviewData[] = await res.json();
+
     return (
         <section>
-            <form action={createReviewAction}>
-                <input name="bookId" value={bookId} hidden readOnly/>
-                <input required name="content" placeholder="리뷰 내용"/>
-                <input required name="author" placeholder="작성자"/>
-                <button type="submit">작성하기</button>
-            </form>
-            Review Editor
+            {reviews.map(v => (
+                <ReviewItem key={`review-${v.id}`} {...v} />
+            ))}
         </section>
     )
 }
@@ -82,6 +87,7 @@ export default async function Page({params}: { params: Promise<{ bookId: string 
         <div className={style.container}>
             <BookDetail bookId={bookId}/>
             <ReviewEditor bookId={bookId}/>
+            <ReviewList bookId={bookId}/>
         </div>
     )
 }
