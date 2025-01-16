@@ -3,8 +3,8 @@ import style from "./page.module.css";
 import {BookData} from "@/types";
 import {Suspense} from "react";
 import {delay} from "@/utils";
-import BookItemSkeleton from "@/components/skeleton/book-item-skeleton";
 import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
+import {Metadata} from "next";
 
 /**
  * 특정 페이지의 유형을 강제로 static, dynamic 페이지로 설정
@@ -16,6 +16,18 @@ import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
 // export const dynamic = 'auto'
 export const dynamic = 'force-dynamic';
 
+/**
+ * page or layout metadata
+ */
+export const metadata: Metadata = {
+    title: '한입북스',
+    description: '한입북스에 등록된 도서들을 만나보세요',
+    openGraph: {
+        title: '한입북스',
+        description: '한입북스에 등록된 도서들을 만나보세요',
+        images: ['/thumbnail.png']
+    }
+}
 
 async function AllBooks() {
     const res = await fetch(

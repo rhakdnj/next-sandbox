@@ -4,6 +4,7 @@ import {notFound} from "next/navigation";
 import ReviewItem from "@/components/review-item";
 import {ReviewEditor} from "@/components/review-editor";
 import Image from "next/image";
+import {Metadata} from "next";
 
 /**
  * dynamicParams처럼 export 하여 페이지의 설정을 우리가 갖에로 조정할 수 있는 이러한 기능들을 라우트 세그먼트 옵션이라 부른다.
@@ -26,6 +27,33 @@ import Image from "next/image";
  */
 export function generateStaticParams() {
     return [{bookId: "1"}, {bookId: "2"}, {bookId: "3"}];
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ bookId: string }>;
+}): Promise<Metadata> {
+    const {bookId} = await params
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BE_URL}/book/${bookId}`);
+    if (!res.ok) {
+        if (res.status === 404) {
+            throw new Error(res.statusText)
+        }
+    }
+
+    const book: BookData = await res.json()
+
+    return {
+        title: `${book.title}: 한입북스`,
+        description: book.description,
+        openGraph: {
+            title: `${book.title}: 한입북스`,
+            description: book.description,
+            images: [book.coverImgUrl]
+        }
+    };
 }
 
 async function BookDetail({bookId}: { bookId: string }) {
