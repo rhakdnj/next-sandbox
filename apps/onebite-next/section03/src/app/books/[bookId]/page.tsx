@@ -3,6 +3,7 @@ import {BookData, ReviewData} from "@/types";
 import {notFound} from "next/navigation";
 import ReviewItem from "@/components/review-item";
 import {ReviewEditor} from "@/components/review-editor";
+import Image from "next/image";
 
 /**
  * dynamicParams처럼 export 하여 페이지의 설정을 우리가 갖에로 조정할 수 있는 이러한 기능들을 라우트 세그먼트 옵션이라 부른다.
@@ -51,7 +52,12 @@ async function BookDetail({bookId}: { bookId: string }) {
                 className={style.cover_img_container}
                 style={{backgroundImage: `url('${coverImgUrl}')`}}
             >
-                <img src={coverImgUrl}/>
+                <Image
+                    src={coverImgUrl}
+                    width={240}
+                    height={300}
+                    alt={`도서 ${title}의 표지 이미지`}
+                />
             </div>
             <div className={style.title}>{title}</div>
             <div className={style.subTitle}>{subTitle}</div>
